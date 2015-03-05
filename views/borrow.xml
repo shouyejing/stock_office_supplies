@@ -33,16 +33,30 @@
                             statusbar_colors="{'draft':'red','sent':'green','approved':'blue','refused':'blue'}"/>
                     </header>
                     <sheet>
-                        <field name="name"/>
-                        <field name="date"/>
-                        <field name="user"/>
-                        <field name="lines">
-                            <tree>
-                                <field name="product_id"/>
-                                <field name="quantity"/>
-                            </tree>
-                        </field>
-                        <field name="picking_id"/>
+                        <h1>
+                            <!--<label string="Borrow Order" />-->
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="date"/>
+                                <field name="user"/>
+                            </group>
+                            <group>
+                                <field name="picking_id"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Order Lines">
+                                <field name="lines">
+                                    <tree>
+                                        <field name="product_id"/>
+                                        <field name="quantity"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>

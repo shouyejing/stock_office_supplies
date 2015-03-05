@@ -3,10 +3,8 @@ from openerp import models, fields, api, exceptions, _
 class borroworderline(models.Model):
     _name = 'stock_office_supplies.borroworderline'
     borroworder = fields.Many2one('stock_office_supplies.borrow_order')
-    product_id = fields.Many2one('product.product')
-    #                              ,
-    #                              domain=[("product_tmpl_id.categ_id", "=", #('categ_id', '=', %(xml_id)d)
-    #                                       ref('stock_office_supplies.product_category_office_supply'))])
+    product_id = fields.Many2one('product.product',
+                                  domain=[("product_tmpl_id.isOfficeSupply", "=", True)])
     quantity = fields.Integer(required=True)
 
 class borroworder(models.Model):
@@ -49,7 +47,6 @@ class borroworder(models.Model):
                                                      "picking_type_id": self.env.ref("stock_office_supplies.stock_picking_borrow").id,
                                                      "priority": '1',
                                                      "origin": self.name})
-            # ids = []
             for line in self.lines:
                 self.env["stock.move"].create({"name": 'OK',
                     "product_id": line.product_id.id,
@@ -58,8 +55,6 @@ class borroworder(models.Model):
                     "location_dest_id": pick.picking_type_id.default_location_dest_id.id,
                     "location_id": pick.picking_type_id.default_location_src_id.id,
                     "picking_id": pick.id})
-                # ids.append(stockmove.id)
-            # pick.write({"move_lines": (6, 0, ids)})
             pick.action_confirm()
             self.picking_id = pick.id
 

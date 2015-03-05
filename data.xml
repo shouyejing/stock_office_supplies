@@ -10,7 +10,6 @@
             <field name="parent_id" ref="product.product_category_all"/>
         </record>
 
-
         <!--<record model="ir.sequence.type" id="sequence_borrow_order_type">-->
             <!--<field name="name">Borrow Order</field>-->
             <!--<field name="code">stock_office_supplies.borrow_order</field>-->
@@ -20,6 +19,15 @@
             <field name="name">Borrow Order Picking</field>
             <!--<field name="code">stock_office_supplies.borrow_order</field>-->
             <field name="prefix">INT/BR/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record model="ir.sequence" id="sequence_picking_return_order">
+            <field name="name">Return Order Picking</field>
+            <!--<field name="code">stock_office_supplies.borrow_order</field>-->
+            <field name="prefix">INT/RET/</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
@@ -40,6 +48,38 @@
             <field name="default_location_src_id" ref="stock.stock_location_stock"/>
             <field name="default_location_dest_id" ref="stock_office_supplies.stock_location_borrow"/>
             <field name="sequence_id" ref="stock_office_supplies.sequence_picking_borrow_order"></field>
+        </record>
+
+        <record model="stock.picking.type" id="stock_office_supplies.stock_picking_return">
+            <field name="name">Return</field>
+            <field name="code">internal</field>
+            <field name="default_location_src_id" ref="stock_office_supplies.stock_location_borrow"/>
+            <field name="default_location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="sequence_id" ref="stock_office_supplies.sequence_picking_return_order"></field>
+        </record>
+
+        <record model="stock.picking.type" id="stock_office_supplies.stock_picking_borrow">
+            <field name="name">Borrow</field>
+            <field name="code">internal</field>
+            <field name="default_location_src_id" ref="stock.stock_location_stock"/>
+            <field name="default_location_dest_id" ref="stock_office_supplies.stock_location_borrow"/>
+            <field name="sequence_id" ref="stock_office_supplies.sequence_picking_borrow_order"></field>
+        </record>
+
+        <record model="stock.location.route" id="stock_office_supplies.stock_route_office_supply">
+            <field name="name">Office Supply Route</field>
+            <field name="product_categ_selectable">True</field>
+            <field name="product_selectable">True</field>
+            <field name="warehouse_selectable">False</field>
+        </record>
+
+        <record model="stock.location.path" id="stock_office_supplies.procurement_rule_return">
+            <field name="name">Return Rule</field>
+            <field name="location_from_id" ref="stock_office_supplies.stock_location_borrow"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="picking_type_id" ref="stock_office_supplies.stock_picking_return"/>
+            <field name="auto">manual</field>
+            <field name="route_id" ref="stock_office_supplies.stock_route_office_supply"/>
         </record>
     </data>
 </openerp>
