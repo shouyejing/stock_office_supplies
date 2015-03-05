@@ -5,6 +5,12 @@
             <field name="usage">internal</field>
         </record>
 
+        <record model="product.category" id="stock_office_supplies.product_category_office_supply">
+            <field name="name">office supply</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+
+
         <!--<record model="ir.sequence.type" id="sequence_borrow_order_type">-->
             <!--<field name="name">Borrow Order</field>-->
             <!--<field name="code">stock_office_supplies.borrow_order</field>-->
@@ -21,7 +27,7 @@
 
         <record model="ir.sequence" id="sequence_borrow_order">
             <field name="name">Borrow Order</field>
-            <!--<field name="code">stock_office_supplies.borrow_order</field>-->
+            <field name="code">stock_office_supplies.borrow_order</field>
             <field name="prefix">BR</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
@@ -35,7 +41,5 @@
             <field name="default_location_dest_id" ref="stock_office_supplies.stock_location_borrow"/>
             <field name="sequence_id" ref="stock_office_supplies.sequence_picking_borrow_order"></field>
         </record>
-
-
     </data>
 </openerp>

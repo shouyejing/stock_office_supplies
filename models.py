@@ -3,20 +3,28 @@ from openerp import models, fields, api, exceptions, _
 class borroworderline(models.Model):
     _name = 'stock_office_supplies.borroworderline'
     borroworder = fields.Many2one('stock_office_supplies.borrow_order')
-    product = fields.Many2one('product.product')
-    quant = fields.Integer(required=True)
+    product_id = fields.Many2one('product.product')
+    #                              ,
+    #                              domain=[("product_tmpl_id.categ_id", "=", #('categ_id', '=', %(xml_id)d)
+    #                                       ref('stock_office_supplies.product_category_office_supply'))])
+    quantity = fields.Integer(required=True)
 
 class borroworder(models.Model):
     _inherit = 'mail.thread'
     _name = 'stock_office_supplies.borrow_order'
 
-    name = fields.Char(default=lambda self: self.env['ir.sequence'].get('stock_office_supplies.sequence_borrow_order') or '/')
+    name = fields.Char(default=lambda self: self.env['ir.sequence'].get('stock_office_supplies.borrow_order') or '/',
+                       copy=False)
     state = fields.Selection([('draft', "Draft"), ('sent', "sent to manager"),
                               ('approved', 'Approved'), ('refused', 'Refused')])
     date = fields.Date(default=fields.Date.today, required=True)
     user = fields.Many2one('res.users', default=lambda self: self.env.user)
     lines = fields.One2many('stock_office_supplies.borroworderline', 'borroworder')
     picking_id = fields.Many2one('stock.picking')
+
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', 'Borrow order name must be unique!'),
+    ]
 
     @api.one
     @api.constrains('lines')
@@ -44,9 +52,9 @@ class borroworder(models.Model):
             # ids = []
             for line in self.lines:
                 self.env["stock.move"].create({"name": 'OK',
-                    "product_id": line.product.id,
-                    "product_uom": line.product.product_tmpl_id.uom_id.id,
-                    "product_uom_qty": line.quant,
+                    "product_id": line.product_id.id,
+                    "product_uom": line.product_id.product_tmpl_id.uom_id.id,
+                    "product_uom_qty": line.quantity,
                     "location_dest_id": pick.picking_type_id.default_location_dest_id.id,
                     "location_id": pick.picking_type_id.default_location_src_id.id,
                     "picking_id": pick.id})
