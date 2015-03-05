@@ -80,7 +80,7 @@
         <record model="product.category" id="stock_office_supplies.product_category_office_supply">
             <field name="name">office supply</field>
             <field name="parent_id" ref="product.product_category_all"/>
-            <field name="route_ids" eval="(4,ref('stock_office_supplies.stock_route_office_supply'),False)"></field>
+            <field name="route_ids" eval="[(4,ref('stock_office_supplies.stock_route_office_supply'),False)]"></field>
         </record>
     </data>
 </openerp>
