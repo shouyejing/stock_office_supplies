@@ -1,0 +1,51 @@
+<openerp>
+    <data>
+        <record model="workflow" id="wkf_borrow_order">
+            <field name="name">Borrow Order Workflow</field>
+            <field name="osv">stock_office_supplies.borrow_order</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record model="workflow.activity" id="wkf_borrow_order_draft">
+            <field name="name">Draft</field>
+            <field name="wkf_id" ref="wkf_borrow_order"/>
+            <field name="flow_start" eval="True"/>
+            <field name="kind">function</field>
+            <field name="action">action_draft()</field>
+        </record>
+
+        <record model="workflow.activity" id="wkf_borrow_order_sent">
+            <field name="name">Sent</field>
+            <field name="wkf_id" ref="wkf_borrow_order"/>
+            <field name="kind">function</field>
+            <field name="action">action_sent()</field>
+        </record>
+
+        <record model="workflow.activity" id="wkf_borrow_order_approved">
+            <field name="name">Approved</field>
+            <field name="wkf_id" ref="wkf_borrow_order"/>
+            <field name="flow_stop" eval="True"/>
+            <field name="kind">function</field>
+            <field name="action">action_approved()</field>
+        </record>
+
+        <record model="workflow.transition" id="borrow_order_draft_to_sent">
+            <field name="act_from" ref="wkf_borrow_order_draft"/>
+            <field name="act_to" ref="wkf_borrow_order_sent"/>
+            <field name="signal">send</field>
+        </record>
+
+        <record model="workflow.transition" id="borrow_order_sent_to_approved">
+            <field name="act_from" ref="wkf_borrow_order_sent"/>
+            <field name="act_to" ref="wkf_borrow_order_approved"/>
+            <field name="signal">approve</field>
+        </record>
+
+        <record model="workflow.transition" id="borrow_order_sent_to_draft">
+            <field name="act_from" ref="wkf_borrow_order_sent"/>
+            <field name="act_to" ref="wkf_borrow_order_draft"/>
+            <field name="signal">refuse</field>
+        </record>
+
+    </data>
+</openerp>
