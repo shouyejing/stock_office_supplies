@@ -1,11 +1,13 @@
 from openerp import models, fields, api, exceptions, _
 
+
 class borroworderline(models.Model):
     _name = 'stock_office_supplies.borroworderline'
     borroworder = fields.Many2one('stock_office_supplies.borrow_order')
     product_id = fields.Many2one('product.product',
                                   domain=[("product_tmpl_id.isOfficeSupply", "=", True)])
     quantity = fields.Integer(required=True)
+
 
 class borroworder(models.Model):
     _inherit = 'mail.thread'
@@ -21,7 +23,7 @@ class borroworder(models.Model):
     picking_id = fields.Many2one('stock.picking')
 
     _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'Borrow order name must be unique!'),
+        ('name_unique', 'unique(name)', 'Borrow order name must be unique!'),
     ]
 
     @api.one
