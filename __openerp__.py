@@ -10,6 +10,9 @@
         'data.xml'
     ],
     'description': """
-    版本1.48
+    版本1.52
+
+
+    support for odoo 8
     """
 }

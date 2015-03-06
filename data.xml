@@ -5,14 +5,10 @@
             <field name="usage">internal</field>
         </record>
 
-        <!--<record model="ir.sequence.type" id="sequence_borrow_order_type">-->
-            <!--<field name="name">Borrow Order</field>-->
-            <!--<field name="code">stock_office_supplies.borrow_order</field>-->
-        <!--</record>-->
-
         <record model="ir.sequence" id="sequence_picking_borrow_order">
             <field name="name">Borrow Order Picking</field>
-            <!--<field name="code">stock_office_supplies.borrow_order</field>-->
+            <!--odoo 8 要加上下面这段。-->
+            <field name="code">stock.picking</field>
             <field name="prefix">INT/BR/</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
@@ -21,21 +17,28 @@
 
         <record model="ir.sequence" id="sequence_picking_return_order">
             <field name="name">Return Order Picking</field>
-            <!--<field name="code">stock_office_supplies.borrow_order</field>-->
+            <!--odoo 8 要加上下面这段。-->
+            <field name="code">stock.picking</field>
             <field name="prefix">INT/RET/</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
 
-        <record model="ir.sequence" id="sequence_borrow_order">
-            <field name="name">Borrow Order</field>
-            <field name="code">stock_office_supplies.borrow_order</field>
-            <field name="prefix">BR</field>
-            <field name="padding">5</field>
-            <field name="number_next">1</field>
-            <field name="number_increment">1</field>
-        </record>
+        <!--<record id="sequence_borrow_order_type" model="ir.sequence.type">-->
+            <!--<field name="name">Borrow Order</field>-->
+            <!--<field name="code">stock_office_supplies.borrow_order</field>-->
+        <!--</record>-->
+
+        <!--odoo 9 只要加上下面这段即可。odoo 8 不知道怎么办。。。-->
+        <!--<record id="sequence_borrow_order" model="ir.sequence">-->
+            <!--<field name="name">Borrow Order</field>-->
+            <!--<field name="code">stock_office_supplies.borrow_order</field>-->
+            <!--<field name="prefix">BR</field>-->
+            <!--<field name="padding">5</field>-->
+            <!--<field name="number_next">1</field>-->
+            <!--<field name="number_increment">1</field>-->
+        <!--</record>-->
 
         <record model="stock.picking.type" id="stock_office_supplies.stock_picking_borrow">
             <field name="name">Borrow</field>
