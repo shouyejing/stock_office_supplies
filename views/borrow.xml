@@ -4,7 +4,7 @@
             <field name="name">borrow tree view</field>
             <field name="model">stock_office_supplies.borrow_order</field>
             <field name="arch" type="xml">
-                <tree string="Office supplies borrows" default_order="date desc,user">
+                <tree string="Office supplies borrows" default_order="name desc">
                     <field name="name"/>
                     <field name="user"/>
                     <field name="date"/>
