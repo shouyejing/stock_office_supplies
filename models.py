@@ -8,6 +8,11 @@ class borroworderline(models.Model):
                                   domain=[("product_tmpl_id.isOfficeSupply", "=", True)])
     quantity = fields.Integer(required=True)
 
+    @api.one
+    @api.constrains('quantity')
+    def _check_quantity(self):
+        if self.quantity <= 0:
+            raise exceptions.ValidationError(_("Quantity must greater than zero!"))
 
 class borroworder(models.Model):
     _inherit = 'mail.thread'
@@ -15,12 +20,21 @@ class borroworder(models.Model):
 
     name = fields.Char(default=lambda self: self.env['ir.sequence'].get('stock_office_supplies.borrow_order') or '/',
                        copy=False)
-    state = fields.Selection([('draft', "Draft"), ('sent', "sent to manager"),
-                              ('approved', 'Approved'), ('refused', 'Refused')])
-    date = fields.Date(default=fields.Date.today, required=True)
-    user = fields.Many2one('res.users', default=lambda self: self.env.user)
+    state = fields.Selection([('draft', "Draft"),
+                              ('sent', "sent to manager"),
+                              ('approved', 'Approved'),
+                              ('refused', 'Refused'),
+                              ('cancelled', 'Cancelled')])
+    date = fields.Date(default=fields.Date.today, required=True,
+                       states={'sent': [('readonly', True)],
+                               'approved': [('readonly', True)],
+                               'refused': [('readonly', True)]})
+    user = fields.Many2one('res.users', default=lambda self: self.env.user, required=True,
+                           states={'sent': [('readonly', True)],
+                               'approved': [('readonly', True)],
+                               'refused': [('readonly', True)]})
     lines = fields.One2many('stock_office_supplies.borroworderline', 'borroworder')
-    picking_id = fields.Many2one('stock.picking')
+    picking_id = fields.Many2one('stock.picking', readonly=True)
 
     _sql_constraints = [
         ('name_unique', 'unique(name)', 'Borrow order name must be unique!'),

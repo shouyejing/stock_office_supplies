@@ -1,15 +1,19 @@
 <openerp>
     <data>
+        <record model="ir.module.category" id="module_category_office_supplies">
+            <field name="name">Office Supplies</field>
+            <field name="sequence">1</field>
+        </record>
+
         <record id="group_office_supplies_user" model="res.groups">
-            <field name="name">User</field>
+            <field name="name">Office Supplies / User</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-            <!--<field name="category_id" ref="base.module_category_manufacturing"/>-->
+            <field name="category_id" ref="stock_office_supplies.module_category_office_supplies"/>
         </record>
         <record id="group_office_supplies_manager" model="res.groups">
-            <field name="name">Manager</field>
-            <!--<field name="category_id" ref="base.module_category_manufacturing"/>-->
+            <field name="name">Office Supplies / Manager</field>
+            <field name="category_id" ref="stock_office_supplies.module_category_office_supplies"/>
             <field name="implied_ids" eval="[(4, ref('group_office_supplies_user'))]"/>
-            <!--<field name="users" eval="[(4, ref('base.user_root'))]"/>-->
         </record>
     </data>
 </openerp>

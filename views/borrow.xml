@@ -29,8 +29,8 @@
                             string="Refuse"
                             states="sent" class="oe_highlight"/>
                         <field name="state" widget="statusbar"
-                            statusbar_visible="draft,sent,approved"
-                            statusbar_colors="{'draft':'red','sent':'green','approved':'blue','refused':'blue'}"/>
+                            statusbar_visible="draft,sent,approved,refused,cancelled"
+                            statusbar_colors="{'draft':'red','sent':'green','approved':'blue','refused':'blue','cancelled':'blue'}"/>
                     </header>
                     <sheet>
                         <h1>
@@ -73,11 +73,16 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="office_supplies" name="Office Supplies"/>
+        <menuitem id="office_supplies" name="Office Supplies"
+                  groups="stock_office_supplies.group_office_supplies_user"/>
 
-        <menuitem id="office_supplies_sub" name="Office Supplies" parent="stock_office_supplies.office_supplies"/>
+        <menuitem id="office_supplies_sub" name="Office Supplies"
+                  parent="stock_office_supplies.office_supplies"
+                  groups="stock_office_supplies.group_office_supplies_user"/>
 
-        <menuitem id="borrow_order_list_menu" name="Borrow orders" parent="stock_office_supplies.office_supplies_sub"
-            action="borrow_order_list_action"/>
+        <menuitem id="borrow_order_list_menu" name="Borrow orders"
+                  parent="stock_office_supplies.office_supplies_sub"
+                  action="borrow_order_list_action"
+                  groups="stock_office_supplies.group_office_supplies_user"/>
     </data>
 </openerp>
