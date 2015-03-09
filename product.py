@@ -9,6 +9,6 @@ class product_template(models.Model):
     @api.one
     def _compute_borrowable(self):
         if not self.categ_id:
-            self.isOfficeSupply = False
+            self.borrowable = False
         else:
-            self.isOfficeSupply = self.categ_id.id == self.env.ref('stock_office_supplies.product_category_office_supply').id
+            self.borrowable = self.categ_id.id == self.env.ref('stock_office_supplies.product_category_office_supply').id
