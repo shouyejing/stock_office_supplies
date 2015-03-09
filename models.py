@@ -4,7 +4,7 @@ class borroworderline(models.Model):
     _name = 'stock_office_supplies.borroworderline'
     borroworder = fields.Many2one('stock_office_supplies.borrow_order')
     product_id = fields.Many2one('product.product',
-                                  domain=[("product_tmpl_id.borrowable", "=", True)])
+                                  domain=[("product_tmpl_id.borrow_ok", "=", True)])
     quantity = fields.Integer(required=True)
 
     @api.one
@@ -108,3 +108,21 @@ class borroworder(models.Model):
 #     _inherit = 'stock.picking'
 #
 #     @api.one
+
+
+class producttemplate(models.Model):
+    _inherit = 'product.template'
+
+    borrow_ok = fields.Boolean('can be borrowed')
+
+    borrowable = fields.Boolean(compute="_compute_borrowable", store=True)
+
+    # @api.depends('categ_id')
+    # @api.one
+    # def _compute_borrowable(self):
+    #     if not self.categ_id:
+    #         self.borrowable = False
+    #     else:
+    #         self.borrowable = self.categ_id.id == \
+    #                           self.env.ref('stock_office_supplies.product_category_office_supply').id
+
