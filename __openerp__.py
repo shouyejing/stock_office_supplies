@@ -13,7 +13,7 @@
     ],
     'application': True,
     'description': """
-    版本1.82
+    版本1.91
 
     support for odoo 8
     """

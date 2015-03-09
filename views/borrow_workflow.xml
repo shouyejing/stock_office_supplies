@@ -36,6 +36,14 @@
             <field name="action">action_approved()</field>
         </record>
 
+        <record model="workflow.activity" id="wkf_borrow_order_first_approved">
+            <field name="name">First Approved</field>
+            <field name="wkf_id" ref="wkf_borrow_order"/>
+            <field name="kind">function</field>
+            <field name="action">action_first_approved()</field>
+            <field name="split_mode">OR</field>
+        </record>
+
         <record model="workflow.activity" id="wkf_borrow_order_transferd">
             <field name="name">Transferd</field>
             <field name="wkf_id" ref="wkf_borrow_order"/>
@@ -56,10 +64,23 @@
             <field name="signal">cancel</field>
         </record>
 
-        <record model="workflow.transition" id="borrow_order_sent_to_approved">
+        <record model="workflow.transition" id="borrow_order_sent_to_first_approved">
             <field name="act_from" ref="wkf_borrow_order_sent"/>
-            <field name="act_to" ref="wkf_borrow_order_approved"/>
+            <field name="act_to" ref="wkf_borrow_order_first_approved"/>
             <field name="signal">approve</field>
+        </record>
+
+        <record model="workflow.transition" id="borrow_order_first_approved_to_approved_1">
+            <field name="act_from" ref="wkf_borrow_order_first_approved"/>
+            <field name="act_to" ref="wkf_borrow_order_approved"/>
+            <field name="condition">amount &gt;= 5000</field>
+            <field name="signal">second_approve</field>
+        </record>
+
+        <record model="workflow.transition" id="borrow_order_first_approved_to_approved_2">
+            <field name="act_from" ref="wkf_borrow_order_first_approved"/>
+            <field name="act_to" ref="wkf_borrow_order_approved"/>
+            <field name="condition">amount &lt; 5000</field>
         </record>
 
         <record model="workflow.transition" id="borrow_order_approved_to_transferd">

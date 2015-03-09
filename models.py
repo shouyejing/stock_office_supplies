@@ -3,7 +3,7 @@ from openerp import models, fields, api, exceptions, _
 class borroworderline(models.Model):
     _name = 'stock_office_supplies.borroworderline'
     borroworder = fields.Many2one('stock_office_supplies.borrow_order')
-    product_id = fields.Many2one('product.product',
+    product_id = fields.Many2one('product.product', required=True,
                                   domain=[("product_tmpl_id.borrow_ok", "=", True)])
     quantity = fields.Integer(required=True)
 
@@ -21,8 +21,10 @@ class borroworder(models.Model):
                        copy=False)
     # name = fields.Char()
 
+    amount = fields.Float(compute='_compute_amount')
     state = fields.Selection([('draft', "Draft"),
                               ('sent', "sent to manager"),
+                              ('first_approved', 'First Approved'),
                               ('approved', 'Approved'),
                               ('transferd', 'Transferd'),
                               ('refused', 'Refused'),
@@ -51,6 +53,15 @@ class borroworder(models.Model):
         ('name_unique', 'unique(name)', 'Borrow order name must be unique!'),
     ]
 
+    @api.depends('lines')
+    @api.one
+    def _compute_amount(self):
+        amount = 0
+        for line in self.lines:
+            if line.product_id:
+                amount += line.product_id.product_tmpl_id.standard_price * line.quantity
+        self.amount = amount
+
     @api.one
     @api.constrains('lines')
     def _check_lines(self):
@@ -64,6 +75,9 @@ class borroworder(models.Model):
     @api.one
     def action_sent(self):
         self.state = 'sent'
+    @api.one
+    def action_first_approved(self):
+        self.state = 'first_approved'
 
     @api.one
     def action_approved(self):
@@ -113,16 +127,15 @@ class borroworder(models.Model):
 class producttemplate(models.Model):
     _inherit = 'product.template'
 
-    borrow_ok = fields.Boolean('can be borrowed')
+    # borrow_ok = fields.Boolean('can be borrowed')
 
-    borrowable = fields.Boolean(compute="_compute_borrowable", store=True)
+    borrow_ok = fields.Boolean(compute="_compute_borrowable", store=True)
 
-    # @api.depends('categ_id')
-    # @api.one
-    # def _compute_borrowable(self):
-    #     if not self.categ_id:
-    #         self.borrowable = False
-    #     else:
-    #         self.borrowable = self.categ_id.id == \
-    #                           self.env.ref('stock_office_supplies.product_category_office_supply').id
+    @api.depends('categ_id')
+    @api.one
+    def _compute_borrowable(self):
+        if not self.categ_id:
+            self.borrow_ok = False
+        else:
+            self.borrow_ok = self.categ_id.id == self.env.ref('stock_office_supplies.product_category_office_supply').id
 

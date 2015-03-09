@@ -23,8 +23,11 @@
                             string="Send"
                             states="draft" class="oe_highlight"/>
                         <button name="approve" type="workflow"
-                            string="Approve"
+                            string="First Approve"
                             states="sent" class="oe_highlight"/>
+                        <button name="second_approve" type="workflow"
+                            string="Second Approve"
+                            states="first_approved" class="oe_highlight"/>
                         <button name="refuse" type="workflow"
                             string="Refuse"
                             states="sent" class="oe_highlight"/>
@@ -32,8 +35,8 @@
                             string="Cancel"
                             states="draft" class="oe_highlight"/>
                         <field name="state" widget="statusbar"
-                            statusbar_visible="draft,sent,approved,transferd,refused,cancelled"
-                            statusbar_colors="{'draft':'red','sent':'green','approved':'blue','transferd':'blue','refused':'blue','cancelled':'blue'}"/>
+                            statusbar_visible="draft,sent,first_approved,approved,transferd,refused,cancelled"
+                            statusbar_colors="{'draft':'red','sent':'green','first_approved':'blue','approved':'blue','transferd':'blue','refused':'blue','cancelled':'blue'}"/>
                     </header>
                     <sheet>
                         <h1>
@@ -47,6 +50,7 @@
                             </group>
                             <group>
                                 <field name="picking_id"/>
+                                <field name="amount"/>
                             </group>
                         </group>
 
