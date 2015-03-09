@@ -28,9 +28,12 @@
                         <button name="refuse" type="workflow"
                             string="Refuse"
                             states="sent" class="oe_highlight"/>
+                        <button name="cancel" type="workflow"
+                            string="Cancel"
+                            states="draft" class="oe_highlight"/>
                         <field name="state" widget="statusbar"
-                            statusbar_visible="draft,sent,approved,refused,cancelled"
-                            statusbar_colors="{'draft':'red','sent':'green','approved':'blue','refused':'blue','cancelled':'blue'}"/>
+                            statusbar_visible="draft,sent,approved,transferd,refused,cancelled"
+                            statusbar_colors="{'draft':'red','sent':'green','approved':'blue','transferd':'blue','refused':'blue','cancelled':'blue'}"/>
                     </header>
                     <sheet>
                         <h1>

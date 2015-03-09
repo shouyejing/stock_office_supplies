@@ -14,6 +14,14 @@
             <field name="action">action_draft()</field>
         </record>
 
+        <record model="workflow.activity" id="wkf_borrow_order_cancelled">
+            <field name="name">Cancelled</field>
+            <field name="wkf_id" ref="wkf_borrow_order"/>
+            <field name="flow_stop" eval="True"/>
+            <field name="kind">function</field>
+            <field name="action">action_cancel()</field>
+        </record>
+
         <record model="workflow.activity" id="wkf_borrow_order_sent">
             <field name="name">Sent</field>
             <field name="wkf_id" ref="wkf_borrow_order"/>
@@ -24,9 +32,16 @@
         <record model="workflow.activity" id="wkf_borrow_order_approved">
             <field name="name">Approved</field>
             <field name="wkf_id" ref="wkf_borrow_order"/>
-            <field name="flow_stop" eval="True"/>
             <field name="kind">function</field>
             <field name="action">action_approved()</field>
+        </record>
+
+        <record model="workflow.activity" id="wkf_borrow_order_transferd">
+            <field name="name">Transferd</field>
+            <field name="wkf_id" ref="wkf_borrow_order"/>
+            <field name="flow_stop" eval="True"/>
+            <field name="kind">function</field>
+            <field name="action">action_transferd()</field>
         </record>
 
         <record model="workflow.transition" id="borrow_order_draft_to_sent">
@@ -35,10 +50,22 @@
             <field name="signal">send</field>
         </record>
 
+        <record model="workflow.transition" id="borrow_order_draft_to_cancelled">
+            <field name="act_from" ref="wkf_borrow_order_draft"/>
+            <field name="act_to" ref="wkf_borrow_order_cancelled"/>
+            <field name="signal">cancel</field>
+        </record>
+
         <record model="workflow.transition" id="borrow_order_sent_to_approved">
             <field name="act_from" ref="wkf_borrow_order_sent"/>
             <field name="act_to" ref="wkf_borrow_order_approved"/>
             <field name="signal">approve</field>
+        </record>
+
+        <record model="workflow.transition" id="borrow_order_approved_to_transferd">
+            <field name="act_from" ref="wkf_borrow_order_approved"/>
+            <field name="act_to" ref="wkf_borrow_order_transferd"/>
+            <field name="condition">picking_id.state=='done'</field>
         </record>
 
         <record model="workflow.transition" id="borrow_order_sent_to_draft">

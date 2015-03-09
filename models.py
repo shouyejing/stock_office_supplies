@@ -1,11 +1,10 @@
 from openerp import models, fields, api, exceptions, _
 
-
 class borroworderline(models.Model):
     _name = 'stock_office_supplies.borroworderline'
     borroworder = fields.Many2one('stock_office_supplies.borrow_order')
     product_id = fields.Many2one('product.product',
-                                  domain=[("product_tmpl_id.isOfficeSupply", "=", True)])
+                                  domain=[("product_tmpl_id.borrowable", "=", True)])
     quantity = fields.Integer(required=True)
 
     @api.one
@@ -20,20 +19,32 @@ class borroworder(models.Model):
 
     name = fields.Char(default=lambda self: self.env['ir.sequence'].get('stock_office_supplies.borrow_order') or '/',
                        copy=False)
+    # name = fields.Char()
+
     state = fields.Selection([('draft', "Draft"),
                               ('sent', "sent to manager"),
                               ('approved', 'Approved'),
+                              ('transferd', 'Transferd'),
                               ('refused', 'Refused'),
                               ('cancelled', 'Cancelled')])
     date = fields.Date(default=fields.Date.today, required=True,
                        states={'sent': [('readonly', True)],
                                'approved': [('readonly', True)],
-                               'refused': [('readonly', True)]})
+                               'transferd': [('readonly', True)],
+                               'refused': [('readonly', True)],
+                               'cancelled': [('readonly', True)]})
     user = fields.Many2one('res.users', default=lambda self: self.env.user, required=True,
                            states={'sent': [('readonly', True)],
                                'approved': [('readonly', True)],
-                               'refused': [('readonly', True)]})
-    lines = fields.One2many('stock_office_supplies.borroworderline', 'borroworder')
+                               'transferd': [('readonly', True)],
+                               'refused': [('readonly', True)],
+                               'cancelled': [('readonly', True)]})
+    lines = fields.One2many('stock_office_supplies.borroworderline', 'borroworder',
+                            states={'sent': [('readonly', True)],
+                               'approved': [('readonly', True)],
+                               'transferd': [('readonly', True)],
+                               'refused': [('readonly', True)],
+                               'cancelled': [('readonly', True)]})
     picking_id = fields.Many2one('stock.picking', readonly=True)
 
     _sql_constraints = [
@@ -77,3 +88,23 @@ class borroworder(models.Model):
     @api.one
     def action_refused(self):
         self.state = 'refused'
+
+    @api.one
+    def action_cancel(self):
+        self.state = 'cancelled'
+
+    @api.one
+    def action_transferd(self):
+        self.state = 'transferd'
+
+    # @api.one
+    # @api.returns('self')
+    # def create(self):
+    #     self.name = self.env['ir.sequence'].get('stock_office_supplies.borrow_order') or '/'
+    #     super(borroworder, self).create()
+    #     return self
+
+# class picking(models.Model):
+#     _inherit = 'stock.picking'
+#
+#     @api.one
