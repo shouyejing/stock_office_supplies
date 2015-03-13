@@ -1,4 +1,7 @@
 from openerp import models, fields, api, exceptions, _
+import xlwt
+import StringIO
+import base64
 
 class borroworderline(models.Model):
     _name = 'stock_office_supplies.borroworderline'
@@ -20,6 +23,9 @@ class borroworder(models.Model):
     name = fields.Char(default=lambda self: self.env['ir.sequence'].get('stock_office_supplies.borrow_order') or '/',
                        copy=False)
     # name = fields.Char()
+
+    data = fields.Binary()
+    filename = fields.Char()
 
     amount = fields.Float(compute='_compute_amount')
     state = fields.Selection([('draft', "Draft"),
@@ -111,6 +117,19 @@ class borroworder(models.Model):
     def action_transferd(self):
         self.state = 'transferd'
 
+    @api.one
+    def generate_xls_file(self):
+        wbk = xlwt.Workbook()
+        sheet1 = wbk.add_sheet('my sheet')
+        sheet2 = wbk.add_sheet('my sheet2')
+
+
+        file_data = StringIO.StringIO()
+        o = wbk.save(file_data)
+        out = base64.encodestring(file_data.getvalue())
+        self.data = out
+        self.filename = "myxls.xls"
+
     # @api.one
     # @api.returns('self')
     # def create(self):
@@ -138,4 +157,3 @@ class producttemplate(models.Model):
             self.borrow_ok = False
         else:
             self.borrow_ok = self.categ_id.id == self.env.ref('stock_office_supplies.product_category_office_supply').id
-

@@ -34,6 +34,8 @@
                         <button name="cancel" type="workflow"
                             string="Cancel"
                             states="draft" class="oe_highlight"/>
+                        <button name="generate_xls_file" type="object"
+                                string = "generate_xls_file"/>
                         <field name="state" widget="statusbar"
                             statusbar_visible="draft,sent,first_approved,approved,transferd,refused,cancelled"
                             statusbar_colors="{'draft':'red','sent':'green','first_approved':'blue','approved':'blue','transferd':'blue','refused':'blue','cancelled':'blue'}"/>
@@ -51,6 +53,7 @@
                             <group>
                                 <field name="picking_id"/>
                                 <field name="amount"/>
+                                <field name="data" filename="filename" readonly="1"/>
                             </group>
                         </group>
 
