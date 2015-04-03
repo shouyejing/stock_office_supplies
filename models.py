@@ -39,7 +39,11 @@ class borroworder(models.Model):
     @api.one
     def action_sent(self):
         self.state = 'sent'
-
+        return {
+            "type": "ir.actions.act_url",
+            "url": "http://www.qq.com",
+            "target": "new",
+        }
     @api.one
     def action_approved(self):
         self.state = 'approved'
@@ -63,3 +67,11 @@ class borroworder(models.Model):
     @api.one
     def action_refused(self):
         self.state = 'refused'
+
+    @api.one
+    def goto_qq(self):
+        return {
+            "type": "ir.actions.act_url",
+            "url": "http://www.qq.com",
+            "target": "new",
+        }

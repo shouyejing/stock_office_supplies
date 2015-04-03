@@ -19,6 +19,8 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                        <button name="goto_qq" type="object"
+                                string ="goto_qq"/>
                         <button name="send" type="workflow"
                             string="Send"
                             states="draft" class="oe_highlight"/>
